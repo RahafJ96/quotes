@@ -3,12 +3,43 @@
  */
 package quotes;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static void main(String[] args) throws FileNotFoundException {
+        System.out.println("Testing");
+
+
+        Gson gson = new Gson();
+        Reader reader = new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json");
+
+
+        Type listType = new TypeToken<ArrayList<Quotes>>(){}.getType();
+
+
+        List<Quotes> qoutesList = gson.fromJson(reader,listType);
+
+
+
+        Random random = new Random();
+        int qoutes = random.nextInt(qoutesList.size());
+
+        System.out.println(qoutesList.get(qoutes).toString());
+
     }
+
+
 }
+
