@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AppTest {
 
     @Test
-    @DisplayName("Converter test")
+    @DisplayName("Testing The Code")
     public void testConverter() throws FileNotFoundException {
 
         Gson gson = new Gson();
@@ -33,13 +33,13 @@ class AppTest {
         }.getType();
 
 
-        List<Quotes> bookList = gson.fromJson(reader, listType);
+        List<Quotes> qoutesList = gson.fromJson(reader, listType);
 
 
         Random random = new Random();
-        int books = random.nextInt(bookList.size());
-        String randomBook = bookList.get(books).toString();
+        int books = random.nextInt(qoutesList.size());
+        String randomBook = qoutesList.get(books).toString();
 
-        assertEquals(randomBook, bookList.get(books).toString());
+        assertEquals(randomBook, qoutesList.get(books).toString());
     }
 }
