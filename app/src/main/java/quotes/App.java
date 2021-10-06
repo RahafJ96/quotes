@@ -3,40 +3,55 @@
  */
 package quotes;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
+
+import java.io.*;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
-import java.util.Random;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        System.out.println("Testing");
-
+    public static void main(String[] args) throws IOException {
 
         Gson gson = new Gson();
-        Reader reader = new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json");
+
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json"));
+        List<Quotes> quote = gson.fromJson(reader, new TypeToken<List<Quotes>>() {}.getType());
+        reader.close();
+
+        int min = 0;
+        int max = quote.size()-1 ;
+
+        try{
+            URL url = new URL("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
 
-        Type listType = new TypeToken<ArrayList<Quotes>>(){}.getType();
+            BufferedWriter add = new BufferedWriter(new FileWriter("C:\\Users\\Motas\\asac\\401\\quotes\\app\\src\\main\\java\\quotes\\recentqoutes.json" , false));
+            ApiQuote qutApi = gson.fromJson(bufferedReader,ApiQuote.class);
+            Quotes quotLocal = new Quotes(null, qutApi.getAuthor(), null,qutApi.getQuote());
+            quote.add(quotLocal);
+            gson = gson.newBuilder().setPrettyPrinting().create();
 
 
-        List<Quotes> qoutesList = gson.fromJson(reader,listType);
+            System.out.println("Quote from API: "+quotLocal);
+            add.write(gson.toJson(quote));
+            add.close();
 
+            bufferedReader.close();
 
-
-        Random random = new Random();
-        int qoutes = random.nextInt(qoutesList.size());
-
-        System.out.println(qoutesList.get(qoutes).toString());
+        }catch (Exception e){
+            System.out.println(quote.get((int) (Math.random()*(max- min+1)+ min)).toString());
+        }
 
     }
 

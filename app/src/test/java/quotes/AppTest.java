@@ -3,43 +3,68 @@
  */
 package quotes;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.DisplayName;
+import com.google.gson.reflect.TypeToken;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
-import java.util.Random;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class AppTest {
 
     @Test
-    @DisplayName("Testing The Code")
-    public void testConverter() throws FileNotFoundException {
+    public void testJsonReader() throws FileNotFoundException {
 
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json"));
+        assertNotNull(
+                "testJsonReader should return: ",
+                String.valueOf(reader)
+        );
+    }
+    @Test
+    public void testConstructorQuote(){
+        Quotes quot = new Quotes(null, "Azzam", "infinite likes","All monsters are human");
+        assertEquals(null, quot.getTags());
+        assertEquals("Azzam", quot.getAuthor());
+        assertEquals("infinite likes", quot.getLIKES());
+        assertEquals("All monsters are human", quot.getText());
+
+    }
+
+    @RepeatedTest(50)
+    @Test
+    public void testRandomQuote() throws FileNotFoundException{
         Gson gson = new Gson();
-        Reader reader = new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json");
+        int idx =0;
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Motas\\asac\\401\\quotes\\app\\src\\main\\java\\quotes\\recentqoutes.json"));
+        List<Quotes> quote = gson.fromJson(reader, new TypeToken<List<Quotes>>() {}.getType());
+        int min = 0;
+        int max = quote.size()-1 ;
+        Quotes quote1 = quote.get((int) (Math.random()*(max- min+1)+ min));
+        for(int i = 0; i < quote.size(); i++) {
+            if(quote.get(i).getText().equals(quote1.getText())){
+                idx = i;
+            }
+        }
+        assertTrue(idx >= 0 && idx < quote.size()-1 , "return true if successfully got a random quote from the json file ");
+    }
 
-
-        Type listType = new TypeToken<ArrayList<Quotes>>() {
-        }.getType();
-
-
-        List<Quotes> qoutesList = gson.fromJson(reader, listType);
-
-
-        Random random = new Random();
-        int books = random.nextInt(qoutesList.size());
-        String randomBook = qoutesList.get(books).toString();
-
-        assertEquals(randomBook, qoutesList.get(books).toString());
+    @Test
+    public void testAPI() throws IOException {
+        URL url = new URL("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        assertEquals(200, connection.getResponseCode(), String.valueOf(true));
     }
 }
+
+
+
