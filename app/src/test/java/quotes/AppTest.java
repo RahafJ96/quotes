@@ -45,7 +45,7 @@ class AppTest {
     public void testRandomQuote() throws FileNotFoundException{
         Gson gson = new Gson();
         int idx =0;
-        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Motas\\asac\\401\\quotes\\app\\src\\main\\java\\quotes\\recentqoutes.json"));
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json"));
         List<Quotes> quote = gson.fromJson(reader, new TypeToken<List<Quotes>>() {}.getType());
         int min = 0;
         int max = quote.size()-1 ;
