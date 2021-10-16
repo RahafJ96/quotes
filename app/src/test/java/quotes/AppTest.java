@@ -24,7 +24,7 @@ class AppTest {
     @Test
     public void testJsonReader() throws FileNotFoundException {
 
-        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json"));
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\test\\java\\quotes\\recentquotes.json"));
         assertNotNull(
                 "testJsonReader should return: ",
                 String.valueOf(reader)
@@ -42,10 +42,10 @@ class AppTest {
 
     @RepeatedTest(50)
     @Test
-    public void testRandomQuote() throws FileNotFoundException{
+    public void testRandomQuote() throws FileNotFoundException {
         Gson gson = new Gson();
         int idx =0;
-        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\main\\java\\quotes\\recentquotes.json"));
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\test\\java\\quotes\\recentquotes.json"));
         List<Quotes> quote = gson.fromJson(reader, new TypeToken<List<Quotes>>() {}.getType());
         int min = 0;
         int max = quote.size()-1 ;
