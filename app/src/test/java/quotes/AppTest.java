@@ -25,22 +25,19 @@ class AppTest {
     public void testJsonReader() throws FileNotFoundException {
 
         BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AB\\401course\\quotes\\app\\src\\test\\java\\quotes\\recentquotes.json"));
-        assertNotNull(
-                "testJsonReader should return: ",
-                String.valueOf(reader)
+        assertNotNull("testJsonReader should return: ",String.valueOf(reader)
         );
     }
     @Test
     public void testConstructorQuote(){
-        Quotes quot = new Quotes(null, "Azzam", "infinite likes","All monsters are human");
+        Quotes quot = new Quotes(null, "Lennon", "infinite likes","All monsters are human");
         assertEquals(null, quot.getTags());
-        assertEquals("Azzam", quot.getAuthor());
+        assertEquals("Lennon", quot.getAuthor());
         assertEquals("infinite likes", quot.getLIKES());
         assertEquals("All monsters are human", quot.getText());
 
     }
 
-    @RepeatedTest(50)
     @Test
     public void testRandomQuote() throws FileNotFoundException {
         Gson gson = new Gson();
@@ -55,7 +52,7 @@ class AppTest {
                 idx = i;
             }
         }
-        assertTrue(idx >= 0 && idx < quote.size()-1 , "return true if successfully got a random quote from the json file ");
+        assertTrue(idx < quote.size()-1, "return true if successfully got a random quote from the json file ");
     }
 
     @Test
